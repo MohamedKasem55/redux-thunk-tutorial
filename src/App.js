@@ -1,23 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
-
+import { useDispatch,useSelector,useStore } from "react-redux";
+import { useEffect } from 'react';
+import { fetchUsers } from './store/actions';
+import Card from './Card';
+import { useState } from 'react';
 function App() {
+  let dispatch = useDispatch();
+  const [users, setUsers] = useState([])
+  let store = useStore()
+  useEffect(() => {
+    dispatch(fetchUsers())
+    store.subscribe(()=>console.log(setUsers(store.getState().data)))
+  }, [])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div style={{display:"flex",justifyContent:"space-around",alignItems:"baseline" ,flexWrap:"wrap"}} > 
+      {users.map(user=>(
+        <Card key={user.id} user={user} />
+      )
+      )}
+      </div>
     </div>
   );
 }
